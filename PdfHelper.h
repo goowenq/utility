@@ -39,7 +39,7 @@ PdfHelper::PdfHelper(const char* name, int col, int row, int pages)
 	i_pad = 0;
 	m_canvas = new TCanvas("c1","c1",800, 600);
 	m_canvas->Divide(m_columns, m_rows);
-	m_fullPdfName = m_pdfName +"_"+i_pdf+".pdf";
+	m_fullPdfName = m_pdfName +"_"+std::to_string(i_pdf)+".pdf";
 }
 
 void PdfHelper::Next(){
@@ -54,7 +54,7 @@ void PdfHelper::Next(){
 			filename += ")"; // last page
 			i_page=0;
 			i_pdf ++;
-			m_fullPdfName = m_pdfName +"_"+i_pdf+".pdf";			
+			m_fullPdfName = m_pdfName +"_"+std::to_string(i_pdf)+".pdf";			
 		}
 		m_canvas->Print(filename.c_str(),"pdf");
 		m_canvas->Clear();
