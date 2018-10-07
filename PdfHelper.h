@@ -1,4 +1,7 @@
-/* Example:
+/* Helper class for PDF printing via ROOT
+*  Wenqiang Gu (goowenq@gmail.com)
+*
+*  Example:
 *  PdfHelper* pdf = new PdfHelper("OutputName", nColumn, nRow, MaxPage);
 *  for(int i=0; i<100; i++){
 *	 TH1F* h = new TH1F();
@@ -66,4 +69,5 @@ void PdfHelper::Next(){
 void PdfHelper::Close(){
 	std::string filename = m_fullPdfName+")";
 	m_canvas->Print(filename.c_str(),"pdf");
+	delete m_canvas;
 }
