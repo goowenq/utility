@@ -139,4 +139,3 @@ chmod +x postinstall.sh
 
 # --- in the singularity container
 ./wcdo-myproj.sh
-
