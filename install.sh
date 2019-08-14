@@ -1,13 +1,14 @@
 #!/bin/bash
 
 # https://cdcvs.fnal.gov/redmine/projects/larwirecell/repository
-larsoft_version=v08_18_00
-larwirecell_version=v08_05_01
+larsoft_version=v08_28_01
+larwirecell_version=v08_05_13
+dunetpc_version=v08_27_02
 sl7img=
 
 clear
 echo
-echo -e "Are they the right versions? (y/n)\n larsoft: $larsoft_version\n larwirecell: $larwirecell_version\n"
+echo -e "Are they the right versions? (y/n)\n larsoft: $larsoft_version\n larwirecell: $larwirecell_version\n dunetpc: $dunetpc_version\n"
 read larinfo
 echo
 
@@ -17,6 +18,8 @@ if [ "$larinfo" = "n" ];then
   read larsoft_version
   echo -n "larwirecell_version="
   read larwirecell_version
+  echo -n "dunetpc_version="
+  read dunetpc_version
 fi
 
 # echo $larsoft_version
@@ -31,13 +34,13 @@ if [ "$sl7img" = "" ];then
   if [ "$sl7opt" = "1" ];then
     echo -n "path_to_sl7img="
     read sl7img
-    ln -s $sl7img sl7.simg
+    ln -s $sl7img sl7krb.simg
   else
-    wcdo.sh get-image sl7 
+    wcdo.sh get-image sl7krb
   fi
 fi
 
-wcdo.sh make-project myproj sl7
+wcdo.sh make-project myproj sl7krb
 
 # echo
 # echo "Please fill the larsoft version in wcdo-local-myproj.rc as follows (default editor: vim)."
@@ -101,7 +104,7 @@ read -p "Press [Enter] key to continue..."
 
 cat << EOF >> /wcdo/wcdo-local-myproj.rc
 source /cvmfs/dune.opensciencegrid.org/products/dune/setup_dune.sh
-setup dunetpc $larsoft_version -q e17:prof
+setup dunetpc $dunetpc_version -q e17:prof
 path-prepend \\\$wcdo_ups_products PRODUCTS
 wcdo-mrb-init
 wcdo-ups-init
