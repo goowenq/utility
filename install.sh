@@ -100,6 +100,9 @@ echo "Successful installation!"
 #echo "After you update your wcdo-local-myproj.rc, try ./wcdo-myproj.sh"
 #echo
 
+echo "Please exit and login again before you use."
+echo
+
 read -p "Press [Enter] key to continue..."
 
 cat << EOF >> /wcdo/wcdo-local-myproj.rc
@@ -114,6 +117,11 @@ echo WIRECELL_PATH=\\\$WIRECELL_PATH
 mrbsetenv
 mrbslp
 export FHICL_FILE_PATH=\\\$WIRECELL_PATH:\\\$FHICL_FILE_PATH
+
+find-fhicl(){
+  fhicl_file=\\\$1
+  for path in `echo \\\$FHICL_FILE_PATH  | sed -e 's/:/\n/g'`;do find \\\$path -name "\\\$fhicl_file"  2>/dev/null;done
+}
 EOF
 EOL
 
