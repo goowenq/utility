@@ -162,6 +162,12 @@ find-fhicl(){
   fhicl_file=\$1
   for path in \`echo \$FHICL_FILE_PATH  | sed -e 's/:/\n/g'\`;do find \$path -name "\$fhicl_file"  2>/dev/null;done
 }
+
+art-dump(){
+  art_file=\$1
+  lar -n1 -c eventdump.fcl \$art_file
+}
+
 EOF
 
 }
