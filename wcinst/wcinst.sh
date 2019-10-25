@@ -3,17 +3,17 @@
 wcinst-init(){
 
   # https://cdcvs.fnal.gov/redmine/projects/larwirecell/repository
-  larsoft_version=v08_28_01
-  larwirecell_version=v08_05_13
-  dunetpc_version=v08_27_02
+  larsoft_version=v08_33_00
+  larwirecell_version=v08_07_00
+  dunetpc_version=v08_33_00
   sl7img=
 
   # download wcdo.sh
   if ! [ -x "$(command -v wcdo.sh)" ]; then
     echo '[warning] wcdo.sh is not found or executable.' >&2
-    echo -e "Would you like to download wcdo.sh now? (y/n)\n"
+    echo -e "Would you like to download wcdo.sh now ([y]/n)? "
     read use_wcdo_download
-    if [ "$use_wcdo_download" = "y" ];then
+    if [ "$use_wcdo_download" = "y" ] || ["$use_wcdo_download" = ""];then
       wget https://www.phy.bnl.gov/~wgu/protodune/wcinst/wcdo.sh
       export PATH=$(pwd):$PATH
       chmod +x wcdo.sh
@@ -31,7 +31,8 @@ wcinst-init(){
   clear
   echo
   echo "Please verify the software version."
-  echo -e "Are they the right versions? (y/n)\n larsoft: $larsoft_version\n larwirecell: $larwirecell_version\n dunetpc: $dunetpc_version\n"
+  echo -e "larsoft: $larsoft_version\nlarwirecell: $larwirecell_version\ndunetpc: $dunetpc_version\n"
+  echo "Are they the right versions ([y]/n)? "
   read larinfo
   echo
   
@@ -47,18 +48,20 @@ wcinst-init(){
   
   echo
   if [ "$sl7img" = "" ];then 
-    echo -e "Please choose your source for the sl7 image (1 or 2):\n 1) an existing copy;\n 2) automated download.\n\n"
+    echo -e "Please choose your source for the sl7 image:\n 1) an existing copy;\n 2) automated download.\n\n"
+    echo "Which one do you want (1/[2])?"
     read sl7opt
-    if [ "$sl7opt" = "1" ];then
+    if [ "$sl7opt" = "2" ] || [ "$sl7opt" = "" ];then
+      wcdo.sh get-image sl7krb
+    else
       echo
-      echo "Please type your path below (eg, path_to_sl7img=../sl7krb.simg):"
+      # echo "Please type your path below (eg, path_to_sl7img=../sl7krb.simg):"
+      echo "Please type your path below ([../sl7krb.simg]):"
       echo "Note: your current working directory is $(pwd)"
       echo
       echo -n "path_to_sl7img="
       read sl7img
       ln -s $sl7img sl7krb.simg
-    else
-      wcdo.sh get-image sl7krb
     fi
   fi
 
@@ -167,6 +170,14 @@ art-dump(){
   art_file=\$1
   lar -n1 -c eventdump.fcl \$art_file
 }
+
+mrbcompile(){
+  mrbsetenv;
+  mrb i -j32
+  mrbslp
+}
+
+alias ls='ls --color'
 
 EOF
 
