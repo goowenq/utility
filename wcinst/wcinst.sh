@@ -129,7 +129,7 @@ wcinst-bootstrap(){
  sed -i '/^wirecell/ s/.*/wirecell        wctdev/g' /wcdo/src/mrb/srcs/larwirecell/ups/product_deps 
  
  mrbsetenv
- mrb i
+ mrb i -j4
  mrbslp
  echo
  echo "--- test 1: ups active | grep wirecell"
