@@ -3,9 +3,9 @@
 wcinst-init(){
 
   # https://cdcvs.fnal.gov/redmine/projects/larwirecell/repository
-  larsoft_version=v08_33_00
-  larwirecell_version=v08_07_00
-  dunetpc_version=v08_33_00
+  larsoft_version=v08_34_00
+  larwirecell_version=v08_08_00
+  dunetpc_version=v08_34_00
   sl7img=
 
   # download wcdo.sh
@@ -94,9 +94,13 @@ EOF
   sed -i '/^wcdo_mrb_project_quals/ s/.*/wcdo_mrb_project_quals="'e17:prof'"/g' wcdo-local-myproj.rc
   
   echo
-  echo "Now the singularity container will start. Wirecell toolkit and LarWirecell package will be installed."
-  echo "Once you go into the container, please run: ./wcinst.sh bootstrap"
+  echo ----------- Please Type the Command Below This Line ----------------
   echo
+  echo ./wcinst.sh bootstrap
+  echo
+  echo --------------------------------------------------------------------
+  echo
+
   read -p "Press [Enter] key to continue..."
 
   # go inside the singularity container
@@ -142,6 +146,18 @@ wcinst-bootstrap(){
   #echo "Here is an example of wcdo-local-myproj.rc"
   #echo "After you update your wcdo-local-myproj.rc, try ./wcdo-myproj.sh"
   #echo
+
+  echo
+  echo ----------- Please Restart The Singularity Container ----------------
+  echo
+  echo exit
+  echo 
+  echo ./wcdo-myproj.sh
+  echo
+  echo ---------------------------------------------------------------------
+  echo
+
+
   read -p "Press [Enter] key to continue..."
 
   # add environment into wcdo-local-myproj.rc
@@ -198,6 +214,15 @@ wcinst-help(){
       - ./wcinst.sh bootstrap # in singularity container
       - exit & relogin singularity (./wcdo-myproj.sh)
 EOF
+}
+
+wcinst-msg(){
+  echo
+  echo ----------- Please Type the Command ------------------
+  echo
+  echo ./wcinst.sh bootstrap
+  echo
+  echo ------------------------------------------------------
 }
 
 cmd="${1:-help}"; shift
