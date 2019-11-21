@@ -112,6 +112,7 @@ wcinst-bootstrap(){
  source wcdo-myproj.rc
  source wcdo-local-myproj.rc
 
+ export UPS_OVERRIDE='-H Linux64bit+3.10-2.17' 
  source /cvmfs/dune.opensciencegrid.org/products/dune/setup_dune.sh
  path-prepend $wcdo_ups_products PRODUCTS
  wcdo-mrb-init
@@ -164,6 +165,7 @@ wcinst-bootstrap(){
   rcfile="/wcdo/wcdo-local-myproj.rc"
   touch $rcfile
   cat <<EOF >> "$rcfile"
+export UPS_OVERRIDE='-H Linux64bit+3.10-2.17'
 source /cvmfs/dune.opensciencegrid.org/products/dune/setup_dune.sh
 setup dunetpc ${dunetpc_version} -q e17:prof
 
