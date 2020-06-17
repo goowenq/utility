@@ -1,6 +1,6 @@
 #!/bin/bash
-WC_PATH=`pwd`/wcp
-WC_EXTERNAL=`pwd`/external
+export WC_PATH=`pwd`/wcp
+export WC_EXTERNAL=`pwd`/external
 
 clear
 echo
@@ -11,9 +11,9 @@ read -p "Press [Enter] key to continue..."
 mkdir -p $WC_EXTERNAL/package
 pushd $WC_EXTERNAL/package
   #--- eigen
-  wget http://bitbucket.org/eigen/eigen/get/3.3.7.tar.gz
-  tar -xzvf 3.3.7.tar.gz
-  pushd eigen-eigen-323c052e1731
+  wget https://gitlab.com/libeigen/eigen/-/archive/3.3.7/eigen-3.3.7.tar.gz
+  tar -xzvf eigen-3.3.7.tar.gz
+  pushd eigen-3.3.7
   mkdir build
   cd build
   cmake -DCMAKE_INSTALL_PREFIX=$WC_EXTERNAL ..

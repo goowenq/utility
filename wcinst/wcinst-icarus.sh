@@ -11,12 +11,12 @@ replace-spdlog-pkgconfig(){
   fi
 }
 
-wcinst-init(){
+wcinst-icarus-init(){
 
   # https://cdcvs.fnal.gov/redmine/projects/larwirecell/repository
   larsoft_version=v08_55_00
   larwirecell_version=v08_12_15
-  dunetpc_version=v08_55_00
+  icaruscode_version=v08_55_00
   sl7img=
 
   # download wcdo.sh
@@ -42,7 +42,7 @@ wcinst-init(){
   clear
   echo
   echo "Please verify the software version."
-  echo -e "larsoft: $larsoft_version\nlarwirecell: $larwirecell_version\ndunetpc: $dunetpc_version\n"
+  echo -e "larsoft: $larsoft_version\nlarwirecell: $larwirecell_version\nicarus: $icaruscode_version\n"
   echo "Are they the right versions ([y]/n)? "
   read larinfo
   echo
@@ -53,8 +53,8 @@ wcinst-init(){
     read larsoft_version
     echo -n "larwirecell_version="
     read larwirecell_version
-    echo -n "dunetpc_version="
-    read dunetpc_version
+    echo -n "icaruscode_version="
+    read icaruscode_version
   fi
   
   echo
@@ -82,7 +82,7 @@ wcinst-init(){
   cat <<EOF > "$rcfile"
 larsoft_version=${larsoft_version}
 larwirecell_version=${larwirecell_version}
-dunetpc_version=${dunetpc_version}
+icaruscode_version=${icaruscode_version}
 EOF
 
   wcdo.sh init
@@ -107,7 +107,7 @@ EOF
   echo
   echo ----------- Please Type the Command Below This Line ----------------
   echo
-  echo ./wcinst.sh bootstrap
+  echo ./wcinst-icarus.sh bootstrap
   echo
   echo --------------------------------------------------------------------
   echo
@@ -118,15 +118,16 @@ EOF
   ./wcdo-myproj.sh
 }
 
-wcinst-bootstrap(){
+wcinst-icarus-bootstrap(){
  source .wcinst.rc
  source wcdo-myproj.rc
  source wcdo-local-myproj.rc
 
- source /cvmfs/dune.opensciencegrid.org/products/dune/setup_dune.sh
+ source /cvmfs/larsoft.opensciencegrid.org/products/setup
  path-prepend $wcdo_ups_products PRODUCTS
  wcdo-mrb-init
  wcdo-mrb-add-source larwirecell $larwirecell_version $larwirecell_version
+ # wcdo-mrb-add-source  icaruscode $icaruscode_version  $icaruscode_version
  wcdo-ups-declare wirecell wctdev
  setup wirecell wctdev -q e19:prof
 
@@ -147,7 +148,7 @@ wcinst-bootstrap(){
  # vim /wcdo/src/mrb/srcs/larwirecell/ups/product_deps
  
  sed -i '/^wirecell/ s/.*/wirecell        wctdev/g' /wcdo/src/mrb/srcs/larwirecell/ups/product_deps 
-
+ 
  mrbsetenv
  mrb i -j4
  mrbslp
@@ -180,8 +181,9 @@ wcinst-bootstrap(){
   rcfile="/wcdo/wcdo-local-myproj.rc"
   touch $rcfile
   cat <<EOF >> "$rcfile"
-source /cvmfs/dune.opensciencegrid.org/products/dune/setup_dune.sh
-setup dunetpc ${dunetpc_version} -q e19:prof
+source  /cvmfs/icarus.opensciencegrid.org/products/icarus/setup_icarus.sh
+setup icaruscode ${icaruscode_version} -q e19:prof
+export UPS_OVERRIDE=''
 
 path-prepend \$wcdo_ups_products PRODUCTS
 wcdo-mrb-init
@@ -216,31 +218,31 @@ EOF
 
 }
 
-wcinst-help(){
+wcinst-icarus-help(){
   cat << EOF
-  wcinst.sh
+  wcinst-icarus.sh
     - a help installer for wirecell + singularity
     - based on wcdo.sh (https://github.com/WireCell/wire-cell-singularity)
 
   usage:
     - show this help message
-      - ./wcinst.sh help
+      - ./wcinst-icarus.sh help
 
     - get wirecell toolkit in three steps
-      - ./wcinst.sh init # in host shell
-      - ./wcinst.sh bootstrap # in singularity container
+      - ./wcinst-icarus.sh init # in host shell
+      - ./wcinst-icarus.sh bootstrap # in singularity container
       - exit & relogin singularity (./wcdo-myproj.sh)
 EOF
 }
 
-wcinst-msg(){
+wcinst-icarus-msg(){
   echo
   echo ----------- Please Type the Command ------------------
   echo
-  echo ./wcinst.sh bootstrap
+  echo ./wcinst-icarus.sh bootstrap
   echo
   echo ------------------------------------------------------
 }
 
 cmd="${1:-help}"; shift
-wcinst-$cmd $@
+wcinst-icarus-$cmd $@
