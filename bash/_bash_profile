@@ -1,0 +1,111 @@
+thisbash(){
+  source ~/.bash_profile
+}
+
+find-fhicl(){
+  fhicl_file=$1
+  for path in `echo $FHICL_FILE_PATH  | sed -e 's/:/\n/g'`;do find $path -name "$fhicl_file"  2>/dev/null;done
+}
+
+# contains(string, substring)
+#
+# Returns 0 if the specified string contains the specified substring,
+# otherwise returns 1.
+contains() {
+    string="$1"
+    substring="$2"
+    if test "${string#*$substring}" != "$string"
+    then
+        return 0    # $substring is in $string
+    else
+        return 1    # $substring is not in $string
+    fi
+}
+
+o(){
+  host=`hostname`
+
+  contains $host "icarus" && host=icarus
+  contains $host "dune" && host=dune
+  contains $host "uboone" && host=uboone
+
+  dir=$1
+  subdir=$2
+  if [ -z "$dir" ];then
+    echo "usage: o [path]"
+  else
+    contains $dir "app" && pushd /$host/$dir/users/wgu
+    contains $dir "data" && pushd /$host/$dir/users/wgu
+    contains $dir "pnfs" && if [ -z "$subdir" ]; then pushd /pnfs/$host; else pushd /pnfs/$host/$subdir/users/wgu;fi
+  fi
+
+
+}
+
+ikuzo(){
+  source /cvmfs/dune.opensciencegrid.org/products/dune/setup_dune.sh
+  setup dunetpc $1 -q e19:prof #:py2
+
+  # setup dunetpc v08_62_00 -q e19:prof #:py2
+  # setup dunetpc v08_59_00 -q e19:prof #:py2
+  # setup dunetpc v08_55_01 -q e19:prof # for local protoduneana
+}
+
+ikuzo-icarus(){
+  source /cvmfs/icarus.opensciencegrid.org/products/icarus/setup_icarus.sh
+  setup icaruscode v08_56_00 -q e19:prof
+  # setup icaruscode v09_04_01 -q e19:prof
+}
+
+ikuzo-uboone(){
+  source /cvmfs/uboone.opensciencegrid.org/products/setup_uboone.sh
+  setup uboonecode v08_00_00_40 -q e17:prof
+
+  source /uboone/app/users/wgu/larsoft/jun17/localProducts_larsoft_v08_05_00_13_e17_prof/setup
+  mrbslp
+}
+
+ikuzo-uboone-42(){
+  source /cvmfs/uboone.opensciencegrid.org/products/setup_uboone.sh
+  setup uboonecode v08_00_00_42 -q e17:prof
+
+  source /uboone/app/users/wgu/larsoft/v08_00_00_42/localProducts_larsoft_v08_05_00_13_e17_prof/setup
+  # mrbslp
+  source /cvmfs/larsoft.opensciencegrid.org/products/mrb/v4_01_04/bin/setup_local_products
+
+}
+export PATH=/uboone/data/users/wgu/uboone-prod/tools:$PATH
+
+samweb-help(){
+  echo samweb list-files "run_number 3900-3901"
+  echo samweb -e dune list-file-locations --dimensions="run_number 3900-3901" --filter-path=enstore [cern-eos]
+  echo samweb get-file-access-url filename.root
+  echo ifdh cp -D gsiftp://fndca1.fnal.gov:2811/pnfs/fnal.gov/usr/dune/tape_backed/dunepro/protodune/np04/detector/None/raw/02/34/72/50/np04_raw_run000781_1_dl1.root .
+  echo
+  echo setup_fnal_security
+  echo samweb2xrootd filename.root
+
+  echo
+  echo samweb list-files "defname:tjyang_diffusion_off_sce_off_cosmics_v08_27_01" 
+  echo samweb locate-file some_file_name
+
+  echo /pnfs/dune/archive/sam_managed_users/wgu/data/b/9/f/2/mcc12_beam_cosmics_30_173_20200528T130433_g44_31e4c89f-35c9-4bef-bc33-e7bb59d6dcb5.root
+  echo /pnfs/uboone/scratch/users/wgu/nu_overlay_detvar/wcpplus_nueDev_Eval_recomb2_run3b_20200628/port/reco/34457968_419/nue_17037_42_2150.root
+}
+
+qstat(){
+  jobsub_q --user=wgu
+}
+
+qstat-held(){
+  jobsub_q --user=wgu --constraint='JobStatus=?=5'
+}
+
+geometry-icarus(){
+  lar -c dump_icarus_geometry.fcl
+}
+
+touch-here(){
+  find . -type f -exec touch {} +
+}
+
